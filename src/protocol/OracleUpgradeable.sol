@@ -17,11 +17,19 @@ contract OracleUpgradeable is Initializable {
         s_poolFactory = poolFactoryAddress;
     }
 
+    // e omg we are calling an external contract
+    // what if the price is manipulated?
+    // can i manipulate the price?
+    // reentrancy???
+    // check the tests? @audit informational you should use forked tests for this!
     function getPriceInWeth(address token) public view returns (uint256) {
         address swapPoolOfToken = IPoolFactory(s_poolFactory).getPool(token);
+        // e ignoring token decimals
+        // q what if the token has  6 decimals? is the price wrong?
         return ITSwapPool(swapPoolOfToken).getPriceOfOnePoolTokenInWeth();
     }
 
+    // Redundant
     function getPrice(address token) external view returns (uint256) {
         return getPriceInWeth(token);
     }
